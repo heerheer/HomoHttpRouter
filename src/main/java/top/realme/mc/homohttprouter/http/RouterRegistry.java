@@ -29,10 +29,10 @@ public class RouterRegistry {
      * @param handler  The router handler.
      */
     public synchronized void register(RouteInfo info, RouterHandler handler) {
-        if (routes.containsKey(info.prefix)) {
-            throw new RuntimeException("Duplicate prefix: " + info.prefix);
+        if (routes.containsKey(info.prefix())) {
+            throw new RuntimeException("Duplicate prefix: " + info.prefix());
         }
-        routes.put(info.prefix, new Entry(info.modId, handler, info));
+        routes.put(info.prefix(), new Entry(info.modId(), handler, info));
     }
 
     /**

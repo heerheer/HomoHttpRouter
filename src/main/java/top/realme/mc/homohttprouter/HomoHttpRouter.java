@@ -91,8 +91,8 @@ public class HomoHttpRouter {
         if (httpServerManager != null) httpServerManager.stop();
     }
 
-    @SubscribeEvent
-    private void onConfigReload(final ModConfigEvent event) {
+
+    private void onConfigReload(ModConfigEvent.Reloading event) {
         if (event.getConfig().getSpec() != Config.SPEC) return;
 
         LOGGER.info("Config changed, restarting HTTP server.");

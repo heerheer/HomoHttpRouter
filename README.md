@@ -16,7 +16,7 @@ HomoHttpRouter 是一个为 **Minecraft Forge 模组开发者**设计的轻量�
 * 路由中心
 * 自动文档生成器
 
-基于成熟的 **OkHttp** 和 **FastJSON2**，设计轻量、稳定、易扩展。
+基于成熟的 **Netty** 和 **FastJSON2**，设计轻量、稳定、易扩展。
 
 ---
 
@@ -30,14 +30,13 @@ HomoHttpRouter 是一个为 **Minecraft Forge 模组开发者**设计的轻量�
 
 Mod 在启动时监听 `HttpServiceBuildEvent`，自动注册路由前缀和处理器。不需要自己创建服务器。
 
-### 📦 OkHttp Request/Response Standard
+### 📦 Netty Request/Response Standard
 
 你的路由处理器将获得：
 
-* `okhttp3.Request`
-* 返回 `okhttp3.Response`
+* `RestRequest`
+* 返回 `RestResponse`
 
-无需设计自定义结构，直接享用 OkHttp 的完整 Request/Response API。
 
 ### 📝 Swagger-like Documentation
 
@@ -62,7 +61,7 @@ Mod 在启动时监听 `HttpServiceBuildEvent`，自动注册路由前缀和处�
 
 ### 🚀 Lightweight & Stable
 
-使用 Java HttpServer + OkHttp + FastJSON2，避免大型网络框架的高负担。
+使用 Java HttpServer + Netty + FastJSON2，避免大型网络框架的高负担。
 
 ---
 
