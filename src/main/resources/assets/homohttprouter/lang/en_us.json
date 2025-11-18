@@ -1,0 +1,13 @@
+{
+  "itemGroup.homohttprouter": "Example Mod Tab",
+  "block.homohttprouter.example_block": "Example Block",
+  "item.homohttprouter.example_item": "Example Item",
+
+  "homohttprouter.configuration.title": "Homo Http Router Configs",
+  "homohttprouter.configuration.section.homohttprouter.common.toml": "Homo Http Router Configs",
+  "homohttprouter.configuration.section.homohttprouter.common.toml.title": "Homo Http Router Configs",
+  "homohttprouter.configuration.items": "Item List",
+  "homohttprouter.configuration.logDirtBlock": "Log Dirt Block",
+  "homohttprouter.configuration.magicNumberIntroduction": "Magic Number Text",
+  "homohttprouter.configuration.magicNumber": "Magic Number"
+}
