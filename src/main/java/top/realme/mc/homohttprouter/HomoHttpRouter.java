@@ -1,6 +1,7 @@
 package top.realme.mc.homohttprouter;
 
 import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import org.checkerframework.checker.units.qual.C;
 import org.slf4j.Logger;
 
@@ -55,7 +56,6 @@ public class HomoHttpRouter {
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
-
         // Register ourselves for server and other game events we are interested in.
         // Note that this is necessary if and only if we want *this* class (HomoHttpRouter) to respond directly to events.
         // Do not add this line if there are no @SubscribeEvent-annotated functions in this class, like onServerStarting() below.
@@ -85,6 +85,13 @@ public class HomoHttpRouter {
         });
     }
 
+    @SubscribeEvent
+    public void onServerStopping(ServerStoppingEvent event) {
+        // Do something when the server stops
+        if (httpServerManager != null) httpServerManager.stop();
+    }
+
+    @SubscribeEvent
     private void onConfigReload(final ModConfigEvent event) {
         if (event.getConfig().getSpec() != Config.SPEC) return;
 

@@ -142,6 +142,23 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 }
 
+dependencies {
+    // Compiles against and includes the supported version of examplelib
+    //   from 2.0 (inclusive)
+    jarJar(implementation("com.alibaba.fastjson2:fastjson2")) {
+        version {
+            // Version used in your workspace and bundled in mod jar
+            prefer '2.0.48'
+        }
+    }
+    jarJar(implementation("com.squareup.okhttp3:okhttp")) {
+        version {
+            // Version used in your workspace and bundled in mod jar
+            prefer '4.12.0'
+        }
+    }
+}
+
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
