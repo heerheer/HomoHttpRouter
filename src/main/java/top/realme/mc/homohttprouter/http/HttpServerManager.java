@@ -171,8 +171,9 @@ public class HttpServerManager {
                 .request(req)
                 .protocol(Protocol.HTTP_1_1)
                 .code(200)
-                .addHeader("Content-Type", "text/html; charset=utf-8")
-                .body(ResponseBody.create(sb.toString().getBytes(), MediaType.parse("text/html; charset=utf-8")))
+                .message("OK")
+                .addHeader("Content-Type", "text/html")
+                .body(ResponseBody.create(sb.toString(), MediaType.parse("text/html")))
                 .build();
     }
 }

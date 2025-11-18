@@ -2,10 +2,13 @@
 
 > 此模组由GTP-5.1编写90%的代码，剩下10%由人 工♂不智能小赫编写。
 
+![icon.png](src/main/resources/icon.png)
+
 ### A Shared HTTP Routing Framework for Minecraft Mods
 
 HomoHttpRouter 是一个为 **Minecraft Forge 模组开发者**设计的轻量级 HTTP 服务聚合框架。
 它让多个 Mod **共享同一个 HTTP 端口**，并通过事件系统动态注册路由，从而避免每个 Mod 都各自启动独立的 HTTP 服务。
+
 
 它本质上是 Minecraft 服务端内置的：
 
