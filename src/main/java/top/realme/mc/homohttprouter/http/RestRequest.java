@@ -55,6 +55,41 @@ public record RestRequest(
     }
 
     /**
+     * Check if path matches template
+     * @param template path template, like /test/<id> or /test/<id>/[a]
+     * @return true if matches, false otherwise
+     */
+    public boolean matchTemplate(String template) {
+        if (template == null || path == null) return false;
+
+        String[] tParts = template.split("/");
+        String[] pParts = path.split("/");
+
+        // 必须段数一致，否则直接不匹配
+        if (tParts.length != pParts.length) return false;
+
+        for (int i = 0; i < tParts.length; i++) {
+            String t = tParts[i];
+            String p = pParts[i];
+
+            // 模板中的 {xxx} 表示通配符，可以匹配任何非空 segment
+            if (t.startsWith("{") && t.endsWith("}")) {
+                if (p.isEmpty()) {
+                    return false; // 占位符不能匹配空值
+                }
+                continue;
+            }
+
+            // 普通字符串必须完全相等
+            if (!t.equals(p)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Get body as String
      * @return body as String
      */
