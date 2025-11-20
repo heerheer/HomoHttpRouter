@@ -114,10 +114,10 @@ configurations {
 
 dependencies {
 
-    implementation "com.alibaba.fastjson2:fastjson2:2.0.48"
+    jarJar(implementation "com.alibaba.fastjson2:fastjson2:2.0.48")
     additionalRuntimeClasspath "com.alibaba.fastjson2:fastjson2:2.0.48"
 
-    implementation  "io.netty:netty-codec-http:4.1.77.Final"
+    jarJar(implementation  "io.netty:netty-codec-http:4.1.77.Final")
     additionalRuntimeClasspath "io.netty:netty-codec-http:4.1.77.Final"
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
@@ -140,23 +140,6 @@ dependencies {
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-}
-
-dependencies {
-    // Compiles against and includes the supported version of examplelib
-    //   from 2.0 (inclusive)
-    jarJar(implementation("com.alibaba.fastjson2:fastjson2")) {
-        version {
-            // Version used in your workspace and bundled in mod jar
-            prefer '2.0.48'
-        }
-    }
-    jarJar(implementation("io.netty:netty-codec-http")) {
-        version {
-            // Version used in your workspace and bundled in mod jar
-            prefer '4.1.77.Final'
-        }
-    }
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

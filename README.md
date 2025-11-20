@@ -107,6 +107,28 @@ config/homohttprouter-server.toml
 ## Step 1: Listen to the Event
 
 ```java
+@EventBusSubscriber
+public class AwhRoutes {
+    @SubscribeEvent
+    private static void onHttp(HttpServiceBuildEvent e){
+        RouterRegistry registry = e.getRegistry();
+
+        // Create RouteInfo
+        RouteInfo info = new RouteInfo.Builder("appliedwebhook", "/awh")
+                .description("AppliedWebhook module HTTP API")
+                .route("GET", "/status", "Check service status", "", "OK")
+                .build();
+
+        // Register RouteInfo
+        registry.register(info, restRequest -> {
+
+                return RestResponse.ok(ReplyPayload.Success("OK"));
+        });
+    }
+}
+```
+
+```java
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class AwhRoutes {
 

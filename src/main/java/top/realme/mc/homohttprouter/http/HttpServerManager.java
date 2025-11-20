@@ -42,7 +42,7 @@ public class HttpServerManager {
 
         try {
             serverChannel = b.bind(port).sync().channel();
-            LOGGER.info("Netty HTTP server started at http://localhost:{}/", port);
+            LOGGER.info("Netty HTTP server started at http://0.0.0.0:{}/", port);
         } catch (Exception e) {
             throw new RuntimeException("Failed to start Netty HTTP server", e);
         }

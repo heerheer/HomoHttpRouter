@@ -1,17 +1,21 @@
 package top.realme.mc.homohttprouter.http;
 
 import com.alibaba.fastjson2.JSON;
+import com.mojang.logging.LogUtils;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
+import org.slf4j.Logger;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
 class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+
+    private final Logger LOGGER = LogUtils.getLogger();
 
     private final RouterRegistry registry;
 
@@ -46,6 +50,8 @@ class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         );
 
         RestResponse restResp;
+
+        LOGGER.debug("Request: {} queryParams {} pathParams {}", req.method().name(), restReq.queryParams(), restReq.pathParams("/test/<id>"));
 
         // docs.json
         if (path.equals("/docs.json")) {
