@@ -120,7 +120,11 @@ class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
             for (RouteInfo.Endpoint ep : info.endpoints()) {
                 sb.append("<div style='border:1px solid #aaa;padding:10px;margin:5px;'>");
                 sb.append("<b>").append(ep.method()).append("</b> ");
-                sb.append("<code>").append(info.prefix()).append(ep.path()).append("</code>");
+                sb.append("<code>").append(info.prefix()).append(
+                        ep.path().replace("/", "&#47;")
+                                .replace("<", "&lt;")
+                                .replace(">", "&gt;")
+                ).append("</code>");
                 sb.append("<p>").append(ep.summary()).append("</p>");
                 sb.append("</div>");
             }
