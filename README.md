@@ -1,22 +1,21 @@
 # HomoHttpRouter
 
-> 此模组由GTP-5.1编写90%的代码，剩下10%由人 工♂不智能小赫编写。
+> 70% of the code for this module was written by GTP-5.1, and the remaining 30% was written by the "artificially-unintelligent" Heer!(me).
 
 ![icon.png](src/main/resources/icon.png)
 
 ### A Shared HTTP Routing Framework for Minecraft Mods
 
-HomoHttpRouter 是一个为 **Minecraft Forge 模组开发者**设计的轻量级 HTTP 服务聚合框架。
-它让多个 Mod **共享同一个 HTTP 端口**，并通过事件系统动态注册路由，从而避免每个 Mod 都各自启动独立的 HTTP 服务。
+HomoHttpRouter is a lightweight HTTP service aggregation framework designed for **Minecraft Forge mod developers**.
+It allows multiple mods to **share the same HTTP port** and dynamically register routes through an event system, thereby avoiding the need for each mod to start an independent HTTP service individually.
 
 
-它本质上是 Minecraft 服务端内置的：
+It essentially is Minecraft server built-in:
 
-* API Gateway
-* 路由中心
-* 自动文档生成器
+* Route Center
+* Automatic Documentation Generator
 
-基于成熟的 **Netty** 和 **FastJSON2**，设计轻量、稳定、易扩展。
+Based on mature **Netty** and **FastJSON2**, designed to be lightweight, stable, and easily extendable.
 
 ---
 
@@ -24,32 +23,32 @@ HomoHttpRouter 是一个为 **Minecraft Forge 模组开发者**设计的轻量�
 
 ### 🔌 Shared HTTP Port
 
-所有 Mod 挂在同一个 HTTP 服务上，避免端口冲突，也避免重复占用网络资源。
+All mods are mounted on the same HTTP service to avoid port conflicts and duplicate network resource usage.
 
 ### ⚙️ Event-Driven Route Registration
 
-Mod 在启动时监听 `HttpServiceBuildEvent`，自动注册路由前缀和处理器。不需要自己创建服务器。
+The Mod listens to the `HttpServiceBuildEvent` when starting, and automatically registers route prefixes and handlers. There is no need to create a server by yourself.
 
 ### 📦 Netty Request/Response Standard
 
-你的路由处理器将获得：
+Your route handlers will receive:
 
 * `RestRequest`
-* 返回 `RestResponse`
+* You need to return `RestResponse`
 
 
-### 📝 Swagger-like Documentation
+### 📝 Auto-Generated Documentation
 
-内建两个文档端点：
+HomoHttpRouter comes with two built-in documentation endpoints:
 
-* `/docs` → 自动生成 HTML API 文档
-* `/docs.json` → FastJSON2 输出的 JSON 文档（可用于外部生成器 / UI）
+* `/docs` → Automatically generated HTML API documentation
+* `/docs.json` → JSON documentation output by FastJSON2 (useful for external generators / UIs)
 
-文档基于你注册的 `RouteInfo` 自动生成。
+The documentation is automatically generated based on the `RouteInfo` you register.
 
 ### 🔧 Configurable Port
 
-端口号可在 Forge 配置中调整：
+The port number can be adjusted in the Forge configuration:
 
 ```toml
 [http]
@@ -57,38 +56,32 @@ Mod 在启动时监听 `HttpServiceBuildEvent`，自动注册路由前缀和处�
     port = 11451
 ```
 
-> 注意：新版配置中仅保留 `PORT` 一个字段。
-
-### 🚀 Lightweight & Stable
-
-使用 Java HttpServer + Netty + FastJSON2，避免大型网络框架的高负担。
-
 ---
 
 # 📦 Installation
 
-将 HomoHttpRouter 作为依赖 Mod 安装至服务器端，然后其他 Mod 可自动注册路由。
+Install HomoHttpRouter as a dependency Mod on the server side, and other Mods can automatically register routes.
 
-如要从源码构建：
+To build from source code:
 
 ```
 git clone https://github.com/yourname/HomoHttpRouter.git
 ./gradlew build
 ```
 
-构建完成后即可在 `build/libs/` 中找到 jar。
+After the build is complete, you can find the jar in `build/libs/`.
 
 ---
 
 # 🔧 Configuration
 
-主配置文件：
+Main configuration file:
 
 ```
 config/homohttprouter-server.toml
 ```
 
-内容：
+Content:
 
 ```toml
 [http]
@@ -96,13 +89,14 @@ config/homohttprouter-server.toml
     port = 11451
 ```
 
-修改后重启服务器生效。
+After modifying the configuration, restart the server for the changes to take effect.
 
 ---
 
 # 🧩 Usage (Mod Developer Guide)
 
-其他 Mod 可以通过监听 `HttpServiceBuildEvent` 注册自己的 HTTP 路由。
+
+Other Mods can register their HTTP routes by listening to the `HttpServiceBuildEvent`.
 
 ## Step 1: Listen to the Event
 
@@ -114,95 +108,76 @@ public class AwhRoutes {
         RouterRegistry registry = e.getRegistry();
 
         // Create RouteInfo
-        RouteInfo info = new RouteInfo.Builder("appliedwebhook", "/awh")
-                .description("AppliedWebhook module HTTP API")
+        RouteInfo info = new RouteInfo.Builder("mymod", "/mymod")
+                .description("MyMod HTTP API")
+                .route("GET", "/status", "Check service status", "", "OK")
+                .build();
+
+        // Register RouteInfo
+        registry.register(info, restRequest -> RestResponse.ok());
+    }
+}
+```
+
+## Step 2: Get Parameters from Request
+
+```java
+@EventBusSubscriber
+public class AwhRoutes {
+    @SubscribeEvent
+    private static void onHttp(HttpServiceBuildEvent e){
+        RouterRegistry registry = e.getRegistry();
+
+        // Create RouteInfo
+        RouteInfo info = new RouteInfo.Builder("mymod", "/mymod")
+                .description("MyMod HTTP API")
                 .route("GET", "/status", "Check service status", "", "OK")
                 .build();
 
         // Register RouteInfo
         registry.register(info, restRequest -> {
-
-                return RestResponse.ok(ReplyPayload.Success("OK"));
-        });
-    }
-}
-```
-
-```java
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class AwhRoutes {
-
-    @SubscribeEvent
-    public static void onHttp(HttpServiceBuildEvent e) {
-        RouterRegistry registry = e.getRegistry();
-
-        // Create RouteInfo
-        RouteInfo info = new RouteInfo.Builder("awh", "/awh")
-                .description("AWH module HTTP API")
-                .route("GET", "/status", "Check server status", "", "{ok:true}")
-                .route("POST", "/user/create", "Create user", "{name,age}", "{id}")
-                .build();
-
-        // Register route
-        registry.register(info, request -> {
-            if (request.url().encodedPath().equals("/awh/status")) {
-
-                String json = "{\"ok\":true}";
-
-                return new Response.Builder()
-                        .request(request)
-                        .code(200)
-                        .protocol(Protocol.HTTP_1_1)
-                        .addHeader("Content-Type", "application/json")
-                        .body(ResponseBody.create(json.getBytes()))
-                        .build();
+            // Get Parameters from Request like this: /status?id=1
+            if(restRequest.matchTemplate("/status")){
+                // you should ignore ?id=1 in template
+                String id = restRequest.queryParam("id");
+                return RestResponse.ok(id);
             }
-
-            return new Response.Builder()
-                    .request(request)
-                    .protocol(Protocol.HTTP_1_1)
-                    .code(404)
-                    .message("Not Found")
-                    .body(ResponseBody.create("Not Found".getBytes()))
-                    .build();
+            
+            // or you can get path params like this: /status/1
+            if(restRequest.matchTemplate("/status/<id>")){
+                String id = restRequest.pathParam("id");
+                return RestResponse.ok(id);
+            }
+            
+           
         });
     }
 }
 ```
-
 ---
 
 # 📃 Automatic Documentation
 
-访问：
+Just visit:
 
 ```
-http://localhost:11451/docs
+http://your server address:[port]/docs
 ```
 
-即可看到自动渲染的 HTML 文档：
+You can then see the automatically rendered HTML document:
 
-* 路由前缀（如 `/awh`）
-* 方法（GET/POST/PUT/DELETE）
-* Summary
-* Body Schema
-* Return Schema
-
-而：
-
+Visit:
 ```
 http://localhost:11451/docs.json
 ```
-
-会返回 FastJSON2 序列化的 JSON：
-
+Will return:
 ```json
 {
   "routes": [
     {
-      "modId": "awh",
-      "prefix": "/awh",
-      "description": "AWH module HTTP API",
+      "modId": "yourmodid",
+      "prefix": "/mymod",
+      "description": "MyMod HTTP API",
       "endpoints": [
         {
           "method": "GET",
@@ -243,31 +218,16 @@ dependencies {
 
 ---
 
-# 📚 Architecture Overview
-
-```
-HomoHttpRouter
- ├── HttpServerManager     ← 启动 Java HttpServer, 处理请求路由
- ├── RouterRegistry        ← 路由前缀 → Handler 映射，支持查询
- ├── RouterHandler         ← Mod 处理器接口 (OkHttp Request/Response)
- ├── RouteInfo             ← Swagger-like 描述结构
- ├── HttpServiceBuildEvent ← Mod 监听此事件注册路由
- └── Config                ← Forge config 管理端口
-```
-
-轻量、解耦、易扩展。
-
----
 
 # 🤝 Contributing
 
-欢迎提交 PR 或 issue 来扩展功能，例如：
+Welcome to submit PRs or issues to extend the functionality, such as:
 
-* 中间件（Middleware）
-* 鉴权（token / API key）
-* WebSocket 支持
-* OpenAPI 3.0 导出
-* 上传文件（multipart）
+* Middleware
+* Authentication (token / API key)
+* WebSocket support
+* OpenAPI 3.0 export
+* File upload (multipart)
 
 ---
 
